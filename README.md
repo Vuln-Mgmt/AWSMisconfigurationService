@@ -1,5 +1,20 @@
 # AWS Misconfiguration Test Repository
 
+## 🔒 Security Remediation Notice
+**Date**: November 6, 2025  
+**Issue**: S3 general purpose buckets should block public read access (Risk Score: 10/10)  
+**Status**: ✅ RESOLVED  
+**Files Modified**: `terraform-s3-misconfigured.tf`
+
+### Remediation Applied:
+1. ✅ Enabled S3 public access block (all four settings: block_public_acls, block_public_policy, ignore_public_acls, restrict_public_buckets)
+2. ✅ Changed bucket ACL from "public-read-write" to "private"
+3. ✅ Removed public bucket policy that allowed unrestricted access
+
+The S3 bucket is now secured against public read access. Remaining non-critical misconfigurations (encryption, versioning, logging) are intentionally left for continued testing purposes.
+
+---
+
 This repository contains intentionally misconfigured AWS infrastructure files designed for security testing, penetration testing, and educational purposes. **DO NOT USE THESE CONFIGURATIONS IN PRODUCTION ENVIRONMENTS.**
 
 ## Files Included
@@ -15,12 +30,12 @@ This repository contains intentionally misconfigured AWS infrastructure files de
 ## Security Misconfigurations Included
 
 ### S3 Bucket Misconfigurations
-- ❌ Public access block disabled
-- ❌ Public read/write ACL permissions
+- ✅ **FIXED**: Public access block enabled (all settings set to true)
+- ✅ **FIXED**: Private ACL applied (no public read/write access)
+- ✅ **FIXED**: Public bucket policy removed (no public access)
 - ❌ No server-side encryption
 - ❌ Versioning disabled
 - ❌ No access logging
-- ❌ Public bucket policy allowing full access
 - ❌ No lifecycle policies
 - ❌ No CloudTrail monitoring
 
