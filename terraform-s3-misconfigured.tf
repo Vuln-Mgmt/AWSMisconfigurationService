@@ -14,6 +14,9 @@ provider "aws" {
   region = "us-east-2"
 }
 
+# Data source to get current AWS account ID
+data "aws_caller_identity" "current" {}
+
 # Misconfigured S3 Bucket with public access
 resource "aws_s3_bucket" "misconfigured_bucket" {
   bucket = "my-misconfigured-bucket-${random_id.bucket_suffix.hex}"
@@ -67,7 +70,7 @@ resource "aws_s3_bucket_versioning" "misconfigured_versioning" {
 # MISCONFIGURATION 5: No access logging
 # (Logging is intentionally not configured)
 
-# MISCONFIGURATION 6: Public bucket policy allowing full access
+# FIXED: Bucket policy restricting access to trusted AWS accounts only
 resource "aws_s3_bucket_policy" "misconfigured_policy" {
   bucket = aws_s3_bucket.misconfigured_bucket.id
 
@@ -75,9 +78,11 @@ resource "aws_s3_bucket_policy" "misconfigured_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadWrite"
+        Sid       = "RestrictedAccess"
         Effect    = "Allow"
-        Principal = "*"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
         Action = [
           "s3:GetObject",
           "s3:PutObject",
