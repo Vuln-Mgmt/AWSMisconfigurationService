@@ -105,3 +105,85 @@ output "bucket_domain_name" {
 output "security_warnings" {
   value = "WARNING: This bucket is intentionally misconfigured with public access, no encryption, and no versioning!"
 }
+
+# Remediated S3 Buckets - Blocking Public Write Access
+# These buckets are configured with proper security controls
+
+# Secure S3 Bucket 1: ai-hackathon-test-bucket-2
+resource "aws_s3_bucket" "secure_bucket_2" {
+  bucket = "ai-hackathon-test-bucket-2"
+
+  tags = {
+    Name        = "SecureBucket2"
+    Environment = "Production"
+    Purpose     = "Secure bucket with public write access blocked"
+  }
+}
+
+# Public Access Block for bucket 2 - BLOCKS all public access
+resource "aws_s3_bucket_public_access_block" "secure_pab_2" {
+  bucket = aws_s3_bucket.secure_bucket_2.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Private ACL for bucket 2
+resource "aws_s3_bucket_acl" "secure_acl_2" {
+  depends_on = [aws_s3_bucket_ownership_controls.secure_ownership_2]
+  bucket     = aws_s3_bucket.secure_bucket_2.id
+  acl        = "private"
+}
+
+resource "aws_s3_bucket_ownership_controls" "secure_ownership_2" {
+  bucket = aws_s3_bucket.secure_bucket_2.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+# Secure S3 Bucket 2: ai-hackathon-test-bucket-3
+resource "aws_s3_bucket" "secure_bucket_3" {
+  bucket = "ai-hackathon-test-bucket-3"
+
+  tags = {
+    Name        = "SecureBucket3"
+    Environment = "Production"
+    Purpose     = "Secure bucket with public write access blocked"
+  }
+}
+
+# Public Access Block for bucket 3 - BLOCKS all public access
+resource "aws_s3_bucket_public_access_block" "secure_pab_3" {
+  bucket = aws_s3_bucket.secure_bucket_3.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Private ACL for bucket 3
+resource "aws_s3_bucket_acl" "secure_acl_3" {
+  depends_on = [aws_s3_bucket_ownership_controls.secure_ownership_3]
+  bucket     = aws_s3_bucket.secure_bucket_3.id
+  acl        = "private"
+}
+
+resource "aws_s3_bucket_ownership_controls" "secure_ownership_3" {
+  bucket = aws_s3_bucket.secure_bucket_3.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+# Output the secure bucket names
+output "secure_bucket_2_name" {
+  value = aws_s3_bucket.secure_bucket_2.id
+}
+
+output "secure_bucket_3_name" {
+  value = aws_s3_bucket.secure_bucket_3.id
+}
