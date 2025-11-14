@@ -7,6 +7,7 @@ terraform.tfvars
 terraform.tfvars.json
 *.tfplan
 *.tfplan.*
+*.zip
 
 # CloudFormation
 *.template
