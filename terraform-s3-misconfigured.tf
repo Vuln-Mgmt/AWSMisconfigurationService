@@ -103,4 +103,3 @@ output "bucket_domain_name" {
 output "security_warnings" {
   value = "WARNING: This bucket is intentionally misconfigured with public access, no encryption, and no versioning!"
 }
-# Test
