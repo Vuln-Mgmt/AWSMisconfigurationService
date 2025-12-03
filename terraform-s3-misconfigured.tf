@@ -83,9 +83,12 @@ resource "aws_s3_bucket_policy" "misconfigured_policy" {
         Principal = "*"
         Action = [
           "s3:PutObject",
-          "s3:DeleteObject"
+          "s3:DeleteObject",
+          "s3:PutBucketPolicy",
+          "s3:DeleteBucket"
         ]
         Resource = [
+          aws_s3_bucket.misconfigured_bucket.arn,
           "${aws_s3_bucket.misconfigured_bucket.arn}/*",
         ]
         Condition = {
