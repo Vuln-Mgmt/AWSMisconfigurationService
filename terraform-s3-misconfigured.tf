@@ -83,13 +83,9 @@ resource "aws_s3_bucket_policy" "misconfigured_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
+          aws_s3_bucket.misconfigured_bucket.arn,
           "${aws_s3_bucket.misconfigured_bucket.arn}/*",
         ]
-        Condition = {
-          Bool = {
-            "aws:SecureTransport" = "false"
-          }
-        }
       },
     ]
   })
